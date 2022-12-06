@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+{% block title %}{{post.title}}{% endblock title %}
+{% block content %}
+<div class="container">
+    <div class="row">
+      <div class="col-md-10 mx-auto">
+        
+        <div class="card my-5">
+          <img
+            src="{{post.thumbnail.url}}"
+            class="card-img-top"
+            alt="..."
+          />
+          <div class="card-body ">
+            <h3 class="card-title my-2 ">
+           {{post.title}} 
+          
+            </h3>
+            {% if user.is_authenticated %}
+            {% if request.user == post.author %}
+            <div>
+              <a href="{% url 'edit' post.slug %}" class="btn btn-primary ">Edit</a>
+              <a href="{% url 'delete' post.slug %}" class="btn btn-primary ">Delete</a>
+            </div>
+            {% endif %}
+          {% endif %}
+                <hr/>
+            <p class="card-text mt-2">
+             {{post.content}}
+            </p>
+            <hr />
+            <!-- comment -->
+            <div class="comment-section">
+              <!-- comment form -->
+              {% if user.is_authenticated%}
+              <div class="card p-0 card-body">
+                <form action="" class="text-white" action = "{% url 'details' post.slug %}" method="POST">
+                    {% csrf_token %}
+                  <textarea name = "comment" class="form-control bg-transparent text-white" placeholder="Write Your comment Here" rows="3"></textarea>
+                  </textarea>
+                  <button class="btn btn-primary my-2 float-end">
+                    Comment
+                  </button>
+                </form>
+              </div>
+              {%endif%}
+             {% for comment in post.comments.all %}
+             <div
+             class="card my-2"
+             style="border: 1px solid rgba(255, 255, 255, 0.37)">
+             <div class="card-body">
+               <div class="media d-flex align-items-center">
+                 <div class="avatar my-2">
+                   <img
+                     src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
+                     title=""
+                     alt=""
+                     style="height: 50px; width: 50px; border-radius: 50%"
+                   />
+                 </div>
+                 <div class="media-body ms-2">
+                   <h6>{{comment.user.username | capfirst}}</h6>
+                   <small>{{comment.created  | date}}</small>
+                 </div>
+               </div>
+
+               <p class="mt-2">{{comment.content | safe}}</p>
+             </div>
+           </div>
+             {% endfor %}
+              
+            
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock content %}

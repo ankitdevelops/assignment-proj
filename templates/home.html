@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+{% block title %}Home | Browse Post {% endblock title %}
+{% block content %}
+<div class="container">
+    <div class="row">
+      <!-- Blog entries-->
+      {% for post in posts %}
+      {% if post.is_featured %}
+      <div class="col-lg-10 mx-auto">
+        <!-- Featured blog post-->
+        <div class="card my-4">
+          <a href="#!"
+            ><img
+              class="card-img-top"
+              src="{{post.thumbnail.url}}"
+              alt="..."
+          /></a>
+          <div class="card-body">
+            <div class="small text-muted">{{post.updated | date}}</div>
+            <h2 class="card-title">{{post.title}}</h2>
+            <p class="card-text">
+              {{post.content  | truncatewords:30}}
+            </p>
+            <a class="btn btn-primary" href="{% url 'details' post.slug %}">Read more →</a>
+          </div>
+        </div>
+        <!-- Nested row for non-featured blog posts-->
+        
+        <div class="row">
+            {% for post in posts %}
+            {% if not post.is_featured %}
+          <div class="col-lg-6">
+            <div class="card mb-4">
+              <a href="#!"
+                ><img
+                  class="card-img-top"
+                  src="{{post.thumbnail.url}}"
+                  alt="..."
+              /></a>
+              <div class="card-body">
+                <div class="small text-muted">{{post.updated | date}}</div>
+                <h2 class="card-title h4">{{post.title | capfirst}}</h2>
+                <p class="card-text">
+                  {{post.content  | truncatewords:30}}
+                </p>
+                <a class="btn btn-primary" href="{% url 'details' post.slug %}">Read more →</a>
+              </div>
+            </div>
+          </div>
+          {% endif %}
+          {% endfor %}
+         
+        </div>
+      </div>
+      {% endif %}
+      {% endfor %}
+      
+    </div>
+  </div>{% endblock content %}
